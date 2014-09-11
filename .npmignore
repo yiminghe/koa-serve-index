@@ -1,5 +1,6 @@
 coverage/
 bower_components/
+node_modules/
 nohup.out
 *.iml
 .idea/
@@ -18,4 +19,3 @@ Thumbs.db
 .svn/
 *.swp
 out/
-node_modules/
