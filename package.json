@@ -1,8 +1,7 @@
 {
   "name": "koa-serve-index",
   "description": "Serve directory listings for koa",
-  "version": "1.0.2",
-  "author": "yiminghe@gmail.com",
+  "version": "1.0.3",
   "license": "MIT",
   "main": "./lib/serve.js",
   "repository": {

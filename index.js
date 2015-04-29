@@ -92,11 +92,8 @@ exports = module.exports = function serveIndex(root, options) {
         var req = this.request;
         var res = this.response;
         if (method !== 'GET' && method !== 'HEAD') {
-            res.status = 'OPTIONS' === method
-                ? 200
-                : 405;
-            res.set('Allow', 'GET, HEAD, OPTIONS');
-            return;
+          yield *next;
+          return;
         }
 
         // parse URLs
