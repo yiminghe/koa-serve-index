@@ -146,7 +146,7 @@ exports = module.exports = function serveIndex(root, options) {
         var files = fs.readdirSync(path);
         if (!hidden) files = removeHidden(files);
         if (filter) files = files.filter(function(file, i, files) {
-            filter(file, i, files, originalDir);
+            return filter(file, i, files, originalDir);
         });
         files.sort();
         // content-negotiation
