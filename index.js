@@ -91,8 +91,17 @@ exports = module.exports = function serveIndex(root, options) {
         var method = this.method;
         var req = this.request;
         var res = this.response;
+
         if (method !== 'GET' && method !== 'HEAD') {
           yield *next;
+          var status = 405;
+
+          if (req.method === 'OPTIONS') {
+              status = 200;
+          }
+
+          this.status = status;
+          this.set('Allow', 'GET, HEAD, OPTIONS');
           return;
         }
 
@@ -136,13 +145,15 @@ exports = module.exports = function serveIndex(root, options) {
         debug('readdir "%s"', path);
         var files = fs.readdirSync(path);
         if (!hidden) files = removeHidden(files);
-        if (filter) files = files.filter(filter);
+        if (filter) files = files.filter(function(file, i, files) {
+            filter(file, i, files, originalDir);
+        });
         files.sort();
         // content-negotiation
         var accept = accepts(req);
         var type = accept.types(mediaTypes);
         // not acceptable
-        if (!type) return createError(406);
+        if (!type) return createError(this, 406);
         exports[mediaType[type]](req, res, files, next, originalDir, showUp, icons, path, view, template, stylesheet);
     };
 };
