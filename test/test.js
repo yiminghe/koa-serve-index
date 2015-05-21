@@ -81,7 +81,7 @@ describe('serveIndex(root)', function () {
             .expect(404, 'Not Found', done)
     })
 
-    it.only('should treat an ENAMETOOLONG as a 414', function (done) {
+    it('should treat an ENAMETOOLONG as a 414', function (done) {
         var path = Array(11000).join('foobar')
         var server = createServer()
 
@@ -247,6 +247,26 @@ describe('serveIndex(root)', function () {
                 });
         });
 
+        it('should support filter files dir', function (done) {
+            var seen = false
+            var server = createServer(fixtures, {'filter': filter})
+
+            function filter(name, i, files, dir) {
+                if (dir === '/users') {
+                  seen = true
+                }
+                return false
+            }
+
+            request(server)
+                .get('/users')
+                .expect(200, function (err, res) {
+                    if (err) return done(err)
+                    seen.should.be.true
+                    res.text.should.not.containEql('foo')
+                    done()
+                });
+        });
         it('should filter after hidden filter', function (done) {
             var seen = false
             var server = createServer(fixtures, {'filter': filter, 'hidden': false})
@@ -291,8 +311,8 @@ describe('serveIndex(root)', function () {
                 var server = createServer()
 
                 serveIndex.html = function (req, res, files) {
-                    res.setHeader('Content-Type', 'text/html');
-                    res.end('called');
+                    res.set('Content-Type', 'text/html');
+                    res.body = 'called';
                 }
 
                 request(server)
@@ -310,8 +330,8 @@ describe('serveIndex(root)', function () {
                             return /\.txt$/.test(f)
                         })
                         .sort()
-                    res.setHeader('Content-Type', 'text/html')
-                    res.end('<b>' + text.length + ' text files</b>')
+                    res.set('Content-Type', 'text/html')
+                    res.body = ('<b>' + text.length + ' text files</b>')
                 }
 
                 request(server)
@@ -324,8 +344,8 @@ describe('serveIndex(root)', function () {
                 var server = createServer()
 
                 serveIndex.html = function (req, res, files, next, dir) {
-                    res.setHeader('Content-Type', 'text/html')
-                    res.end('<b>' + dir + '</b>')
+                    res.set('Content-Type', 'text/html')
+                    res.body = ('<b>' + dir + '</b>')
                 }
 
                 request(server)
@@ -338,8 +358,8 @@ describe('serveIndex(root)', function () {
                 var server = createServer()
 
                 serveIndex.html = function (req, res, files, next, dir, showUp, icons, path, view, template) {
-                    res.setHeader('Content-Type', 'text/html')
-                    res.end(String(fs.existsSync(template)))
+                    res.set('Content-Type', 'text/html')
+                    res.body = (String(fs.existsSync(template)))
                 }
 
                 request(server)
@@ -352,8 +372,8 @@ describe('serveIndex(root)', function () {
                 var server = createServer()
 
                 serveIndex.html = function (req, res, files, next, dir, showUp, icons, path, view, template) {
-                    res.setHeader('Content-Type', 'text/html')
-                    res.end(fs.readFileSync(template, 'utf8'))
+                    res.set('Content-Type', 'text/html')
+                    res.body = (fs.readFileSync(template, 'utf8'))
                 }
 
                 request(server)
@@ -370,8 +390,8 @@ describe('serveIndex(root)', function () {
                 var server = createServer()
 
                 serveIndex.html = function (req, res, files, next, dir, showUp, icons, path, view, template, stylesheet) {
-                    res.setHeader('Content-Type', 'text/html')
-                    res.end(String(fs.existsSync(stylesheet)))
+                    res.set('Content-Type', 'text/html')
+                    res.body = (String(fs.existsSync(stylesheet)))
                 }
 
                 request(server)
@@ -391,8 +411,8 @@ describe('serveIndex(root)', function () {
                 var server = createServer()
 
                 serveIndex.plain = function (req, res, files) {
-                    res.setHeader('Content-Type', 'text/plain');
-                    res.end('called');
+                    res.set('Content-Type', 'text/plain');
+                    res.body = ('called');
                 }
 
                 request(server)
@@ -412,8 +432,8 @@ describe('serveIndex(root)', function () {
                 var server = createServer()
 
                 serveIndex.json = function (req, res, files) {
-                    res.setHeader('Content-Type', 'application/json');
-                    res.end('"called"');
+                    res.set('Content-Type', 'application/json');
+                    res.body = ('"called"');
                 }
 
                 request(server)
