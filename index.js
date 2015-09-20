@@ -85,7 +85,8 @@ exports = module.exports = function serveIndex(root, options) {
         , view = options.view || 'tiles'
         , filter = options.filter
         , template = options.template || defaultTemplate
-        , stylesheet = options.stylesheet || defaultStylesheet;
+        , stylesheet = options.stylesheet || defaultStylesheet
+        , fileSort = options.fileSort || defaultFileSort;
 
     return function *serveIndex(next) {
         var method = this.method;
@@ -154,7 +155,7 @@ exports = module.exports = function serveIndex(root, options) {
         var type = accept.types(mediaTypes);
         // not acceptable
         if (!type) return createError(this, 406);
-        exports[mediaType[type]](req, res, files, next, originalDir, showUp, icons, path, view, template, stylesheet);
+        exports[mediaType[type]](req, res, files, next, originalDir, showUp, icons, path, view, template, stylesheet, fileSort);
     };
 };
 
@@ -162,7 +163,7 @@ exports = module.exports = function serveIndex(root, options) {
  * Respond with text/html.
  */
 
-exports.html = function (req, res, files, next, dir, showUp, icons, path, view, template, stylesheet) {
+exports.html = function (req, res, files, next, dir, showUp, icons, path, view, template, stylesheet, fileSort) {
     var str = fs.readFileSync(template, 'utf8');
     var style = fs.readFileSync(stylesheet, 'utf8');
     stat(path, files, function (err, stats) {
@@ -224,7 +225,7 @@ function createError(context, code, msg) {
  * Sort function for with directories first.
  */
 
-function fileSort(a, b) {
+function defaultFileSort(a, b) {
     return Number(b.stat && b.stat.isDirectory()) - Number(a.stat && a.stat.isDirectory()) ||
         String(a.name).toLocaleLowerCase().localeCompare(String(b.name).toLocaleLowerCase());
 }
