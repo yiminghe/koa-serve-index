@@ -399,6 +399,23 @@ describe('serveIndex(root)', function () {
                     .set('Accept', 'text/html')
                     .expect(200, 'true', done)
             });
+
+            it('should sort by custom function', function(done) {
+                var server = createServer(null, {
+                  fileSort: function(a, b) {
+                      return a.stat.ctime.getTime() - b.stat.ctime.getTime();
+                  },
+                });
+                serveIndex.html = function (req, res, files) {
+                    res.set('Content-Type', 'text/html')
+                    res.body = (files.join());
+                };
+
+                request(server)
+                    .get('/')
+                    .set('Accept', 'text/html')
+                    .expect(200, '#directory,file #1.txt,foo bar,g# %3 o %2525 %37 dir,nums,todo.txt,users,さくら.txt', done);
+            });
         });
 
         describe('exports.plain', function () {
