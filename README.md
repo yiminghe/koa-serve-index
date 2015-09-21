@@ -12,6 +12,11 @@ https://github.com/expressjs/serve-index
 [![node version](https://img.shields.io/badge/node.js-%3E=_0.11-green.svg?style=flat-square)](http://nodejs.org/download/)
 
 
+## difference between expressjs/serve-index
+
+- support fileSort option: [#3](https://github.com/yiminghe/koa-serve-index/pull/3)
+
+
 ## example
 
 ```javascript

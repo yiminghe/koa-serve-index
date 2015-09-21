@@ -1,13 +1,17 @@
 {
   "name": "koa-serve-index",
   "description": "Serve directory listings for koa",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "license": "MIT",
-  "main": "./lib/serve.js",
   "repository": {
     "type": "git",
     "url": "http://github.com/yiminghe/koa-serve-index.git"
   },
+  "files": [
+    "index.js",
+    "test",
+    "public"
+  ],
   "dependencies": {
     "accepts": "~1.1.0",
     "batch": "0.5.1",
@@ -25,6 +29,7 @@
     "node": ">= 0.11.0"
   },
   "scripts": {
+    "publish": "git push origin",
     "test": "node --harmony ./node_modules/mocha/bin/mocha --harmony --reporter spec --bail --check-leaks test/",
     "test-cov": "node --harmony ./node_modules/istanbul-harmony/lib/cli cover node_modules/mocha/bin/_mocha -- --reporter dot --check-leaks test/",
     "test-travis": "node --harmony ./node_modules/istanbul-harmony/lib/cli cover node_modules/mocha/bin/_mocha --report lcovonly -- --reporter spec --check-leaks test/"
