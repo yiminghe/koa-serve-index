@@ -14,7 +14,7 @@
  */
 
 var accepts = require('accepts');
-var debug = require('debug')('serve-index');
+var debug = require('debug')('koa-serve-index');
 var http = require('http')
     , fs = require('fs')
     , path = require('path')
